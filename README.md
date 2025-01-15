@@ -1,0 +1,2 @@
+# Python-project---Svikova-Bittnar
+This project will analyze real estate prices in PRague for both rental and purchase of flats of different sizes. The primary data source will be Sreality.cz, from which we will collect data on flat prices, locations and sizes. The objective is to compare the cost of renting versus buying flats in Prague. By incorporating current inflation rates and typical mortgage conditions, we will try to help users decide the financial viability of renting versus purchasing property.
