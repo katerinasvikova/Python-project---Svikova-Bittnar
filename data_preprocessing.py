@@ -4,10 +4,7 @@ import re
 df = pd.read_csv('real_estate_prague.csv')
 
 def preprocess_data(data):
-      
-    # Remove the ID column
-    data = data.drop('ID', axis=1)
-    
+        
     # Extract the size of the flat from the 'Name' column
     data['Size_m2'] = data['Name'].apply(lambda x: int(re.findall(r'(\d+)\s*m²', x)[0]) if re.findall(r'(\d+)\s*m²', x) else None)
 
