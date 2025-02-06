@@ -22,3 +22,15 @@ else:
     
     # Load model 
     model = joblib.load('random_forest_model_compressed.pkl')
+
+    predictions = model.predict(X)
+
+    # Add predictions to the dataset
+    predict_price['Predicted Price'] = predictions
+
+    # Filter only observations where the predicted price is lower than the actual price
+    price_drops = predict_price[predict_price['Predicted Price'] < predict_price['Price (CZK)']]
+
+    # Return only those observations
+    import ace_tools as tools  # Use ace_tools to display DataFrame
+    tools.display_dataframe_to_user(name="Predicted Price Drops", dataframe=price_drops)
