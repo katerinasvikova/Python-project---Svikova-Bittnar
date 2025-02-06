@@ -47,7 +47,7 @@ def preprocess_data(data):
     data = check_missing_values(data)
 
     # Count the new flat advertisements
-    true_count = df[df['Is New'] == True].shape[0]
+    true_count = data[data['Is New'] == True].shape[0]
     print(f"There is {true_count} of new advertisements of flats in Prague.")
     
     return data
