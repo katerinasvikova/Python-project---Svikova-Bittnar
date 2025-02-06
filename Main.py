@@ -1,7 +1,10 @@
 import joblib
+import pandas as pd
+
 from Functions.Fetch import RealEstateFetcher
 from Functions.Preprocess import preprocess_data
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
 
 # Initialize the RealEstateFetcher class
 real_estate_fetcher = RealEstateFetcher()
@@ -32,6 +35,17 @@ else:
     # Filter only observations where the predicted price is lower than the actual price
     price_drops = predict_price[predict_price['Predicted Price'] < predict_price['Price (CZK)']]
 
-    # Return only those observations
-    import ace_tools as tools  # Use ace_tools to display DataFrame
-    tools.display_dataframe_to_user(name="Predicted Price Drops", dataframe=price_drops)
+    # Retraining the random forest
+    X_retrain = predict_price[['Size_m2', 'Latitude', 'Longitude', 'Flat Type']]
+    y_retrain = predict_price['Price (CZK)']
+
+    X_train, X_test, y_train, y_test = train_test_split(X_retrain, y_retrain, test_size = 0.2, random_state = 42)
+    
+    new_model = RandomForestRegressor(n_estimators = 1000,
+                                      random_state = 42,
+                                      max_depth = 10,
+                                      min_samples_split = 5
+                                     )
+    new_model.fit(X_train, y_train)
+
+    predictions = new_model.predict(y_test)
