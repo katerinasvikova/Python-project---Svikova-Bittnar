@@ -86,14 +86,14 @@ new_df = pd.DataFrame(estate_records)
 
 # If it's not the first fetch, compare new data with previous data
 if not prev_df.empty:
-    new_ids = set(new_df['ID'])  # IDs of the current fetched ads
-    prev_ids = set(prev_df['ID'])  # IDs of the previous ads
-    
-    # Remove ads that have already been seen (i.e., those that are in the previous dataset)
-    new_df = new_df[~new_df['ID'].isin(prev_ids)]  # Only keep the new ads
+    # Find common ads (ads that exist in both new_df and prev_df)
+    common_ads = prev_df[prev_df['ID'].isin(new_df['ID'])]
+
+    # Find new ads (ads that are in new_df but not in prev_df)
+    new_ads = new_df[~new_df['ID'].isin(prev_df['ID'])]
 
 # Concatenate the new data with the previous data
-combined_df = pd.concat([prev_df, new_df], ignore_index=True)
+combined_df = pd.concat([common_ads, new_ads], ignore_index=True)
 
 # Save the combined DataFrame back to the file
 combined_df.to_csv(output_filename, index=False, encoding='utf-8')
