@@ -48,4 +48,4 @@ else:
                                      )
     new_model.fit(X_train, y_train)
 
-    predictions = new_model.predict(y_test)
+    predictions = new_model.predict(X_test)

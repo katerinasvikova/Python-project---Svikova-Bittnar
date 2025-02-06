@@ -94,6 +94,9 @@ class RealEstateFetcher:
         # Concatenate the new data with the previous data
         combined_df = pd.concat([common_ads, new_ads], ignore_index=True)
 
+        # Remove duplicates in combined data
+        combined_df = combined_df.drop_duplicates(subset=['ID'], keep='first')
+        
         # Save the combined DataFrame back to the file
         combined_df.to_csv(self.output_filename, index=False, encoding='utf-8')
         print(f"Data saved to {self.output_filename}")
