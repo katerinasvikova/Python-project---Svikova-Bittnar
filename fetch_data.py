@@ -1,4 +1,5 @@
 import requests
+import os
 import pandas as pd
 
 # Function to fetch estate data for a given category (1 = buy, 2 = rent) and flat type (category_sub_cb)
@@ -36,6 +37,18 @@ def fetch_estates_data(category_main_cb, category_sub_cb):
 flat_types = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16]  
 estate_records = []
 
+# Output filename for storing the dataset
+output_filename = 'real_estate_prague.csv'
+
+# Check if the file exists (first fetch or not)
+if os.path.exists(output_filename):
+    # Load previous dataset (if exists) to check for new advertisements
+    prev_df = pd.read_csv(output_filename)
+    # Change the 'Is New' column to False for all previous data
+    prev_df['Is New'] = False
+else:
+    prev_df = pd.DataFrame()  # Empty DataFrame if it's the first fetch
+
 # Fetch data for both 'buy' and 'rent' for each flat type
 for flat_type in flat_types:
     # Fetch estates for sale (category_main_cb=1)
@@ -48,7 +61,8 @@ for flat_type in flat_types:
             'Location': estate['locality'],
             'Latitude': estate['gps']['lat'],
             'Longitude': estate['gps']['lon'],
-            'Flat Type': flat_type
+            'Flat Type': flat_type,
+            'Is New': True # Mark all fetched estates as new initially
         }
         estate_records.append(estate_record)
     
@@ -62,19 +76,26 @@ for flat_type in flat_types:
             'Location': estate['locality'],
             'Latitude': estate['gps']['lat'],
             'Longitude': estate['gps']['lon'],
-            'Flat Type': flat_type
+            'Flat Type': flat_type,
+            'Is New': True
         }
         estate_records.append(estate_record)
 
-# Create a DataFrame 
-df = pd.DataFrame(estate_records)
+# Create a DataFrame for new estates
+new_df = pd.DataFrame(estate_records)
 
-# Save the DataFrame to a CSV file
-output_filename = 'real_estate_prague.csv'
-df.to_csv(output_filename, index=False, encoding='utf-8')
+# If it's not the first fetch, compare new data with previous data
+if not prev_df.empty:
+    new_ids = set(new_df['ID'])  # IDs of the current fetched ads
+    prev_ids = set(prev_df['ID'])  # IDs of the previous ads
+    
+    # Remove ads that have already been seen (i.e., those that are in the previous dataset)
+    new_df = new_df[~new_df['ID'].isin(prev_ids)]  # Only keep the new ads
+
+# Concatenate the new data with the previous data
+combined_df = pd.concat([prev_df, new_df], ignore_index=True)
+
+# Save the combined DataFrame back to the file
+combined_df.to_csv(output_filename, index=False, encoding='utf-8')
 print(f"Data saved to {output_filename}")
-
-# Print the first few rows
-print(df.head())
-
 
