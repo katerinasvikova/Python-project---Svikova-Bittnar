@@ -47,3 +47,7 @@ else:
     new_model.fit(X_train, y_train)
 
     joblib.dump(new_model, 'random_forest_model_compressed.pkl', compress=3)
+
+    print(price_drops)
+
+    print(f'You have {price_drops.shape[0]} new flat advertisements with predicted market value above listing price. For details see the table above.')
