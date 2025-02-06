@@ -36,11 +36,9 @@ else:
     price_drops = predict_price[predict_price['Predicted Price'] < predict_price['Price (CZK)']]
 
     # Retraining the random forest
-    X_retrain = predict_price[['Size_m2', 'Latitude', 'Longitude', 'Flat Type']]
-    y_retrain = predict_price['Price (CZK)']
+    X_train = predict_price[['Size_m2', 'Latitude', 'Longitude', 'Flat Type']]
+    y_train = predict_price['Price (CZK)']
 
-    X_train, X_test, y_train, y_test = train_test_split(X_retrain, y_retrain, test_size = 0.2, random_state = 42)
-    
     new_model = RandomForestRegressor(n_estimators = 1000,
                                       random_state = 42,
                                       max_depth = 10,
@@ -48,4 +46,4 @@ else:
                                      )
     new_model.fit(X_train, y_train)
 
-    predictions = new_model.predict(X_test)
+    joblib.dump(new_model, 'random_forest_model_compressed.pkl', compress=3)
