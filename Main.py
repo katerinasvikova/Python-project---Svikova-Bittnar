@@ -4,7 +4,6 @@ import pandas as pd
 from Functions.Fetch import RealEstateFetcher
 from Functions.Preprocess import preprocess_data
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
 
 # Initialize the RealEstateFetcher class
 real_estate_fetcher = RealEstateFetcher()
