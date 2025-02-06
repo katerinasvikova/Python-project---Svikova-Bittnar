@@ -47,4 +47,5 @@ else:
     
     print(price_drops)
 
-print(price_drops.shape)
+print(f'You have {price_drops.shape[0]} new flat advertisements with predicted market value above listing price. For details see the table above.')
+
