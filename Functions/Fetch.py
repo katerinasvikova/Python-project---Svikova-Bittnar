@@ -39,26 +39,7 @@ class RealEstateFetcher:
 
         return estates
 
-    def remove_zero_price_flat(self, data):
-        """Remove rows with zero-price flats."""
-        if (data['Price (CZK)'] == 0).any():
-            data = data[data['Price (CZK)'] != 0]
-            print("Zero-price flats have been removed.")
-        else:
-            print("No zero-price flats found.")
-        data = data.reset_index(drop=True)
-        return data
-
-    def check_missing_values(self, data):
-        """Check and remove rows with missing values."""
-        for column in data.columns:
-            missing_values = data[column].isna().sum()
-            if missing_values > 0:
-                print(f"Column '{column}' has {missing_values} missing values so we remove them.")
-        data = data.dropna().reset_index(drop=True)
-        return data
-
-    def fetch_and_process_data(self):
+    def fetch_and_exctract_data(self):
         """Fetch data for both 'buy' and 'rent' for each flat type and preprocess."""
         # Load previous dataset (if exists) to check for new advertisements
         if os.path.exists(self.output_filename):
